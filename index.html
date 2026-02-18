@@ -1,0 +1,725 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SolRadar — Solana Token Intelligence</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Syne:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #030712;
+    --bg2: #0a0f1e;
+    --bg3: #0f1629;
+    --border: #1a2540;
+    --accent: #00f5c4;
+    --accent2: #7c3aed;
+    --accent3: #f59e0b;
+    --buy: #00f5c4;
+    --watch: #f59e0b;
+    --nogo: #ef4444;
+    --text: #e2e8f0;
+    --text2: #64748b;
+    --text3: #94a3b8;
+    --glow: 0 0 20px rgba(0,245,196,0.15);
+  }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body {
+    font-family: 'Syne', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+  body::before {
+    content: '';
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: 
+      radial-gradient(ellipse 80% 40% at 20% 0%, rgba(124,58,237,0.08) 0%, transparent 60%),
+      radial-gradient(ellipse 60% 30% at 80% 100%, rgba(0,245,196,0.05) 0%, transparent 60%);
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  /* HEADER */
+  header {
+    position: sticky; top: 0; z-index: 100;
+    background: rgba(3,7,18,0.92);
+    backdrop-filter: blur(20px);
+    border-bottom: 1px solid var(--border);
+    padding: 0 24px;
+    height: 60px;
+    display: flex; align-items: center; justify-content: space-between;
+  }
+  .logo {
+    display: flex; align-items: center; gap: 10px;
+    font-size: 20px; font-weight: 800; letter-spacing: -0.5px;
+  }
+  .logo-icon {
+    width: 32px; height: 32px;
+    background: linear-gradient(135deg, var(--accent), var(--accent2));
+    border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 16px;
+  }
+  .logo span { color: var(--accent); }
+  .header-stats {
+    display: flex; align-items: center; gap: 24px;
+    font-family: 'Space Mono', monospace;
+    font-size: 11px; color: var(--text2);
+  }
+  .stat-pill {
+    display: flex; align-items: center; gap: 6px;
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 4px 12px;
+  }
+  .live-dot {
+    width: 6px; height: 6px; border-radius: 50%;
+    background: var(--accent);
+    animation: pulse 1.5s infinite;
+  }
+  @keyframes pulse {
+    0%,100% { opacity:1; box-shadow: 0 0 0 0 rgba(0,245,196,0.4); }
+    50% { opacity:0.7; box-shadow: 0 0 0 4px rgba(0,245,196,0); }
+  }
+
+  /* LAYOUT */
+  .main {
+    position: relative; z-index: 1;
+    display: grid;
+    grid-template-columns: 1fr 300px;
+    grid-template-rows: auto 1fr;
+    gap: 0;
+    height: calc(100vh - 60px);
+  }
+
+  /* FILTERS */
+  .filters {
+    grid-column: 1 / -1;
+    padding: 16px 24px;
+    border-bottom: 1px solid var(--border);
+    display: flex; align-items: center; gap: 16px; flex-wrap: wrap;
+    background: var(--bg);
+  }
+  .filter-group { display: flex; align-items: center; gap: 8px; }
+  .filter-label { font-size: 11px; color: var(--text2); text-transform: uppercase; letter-spacing: 1px; font-weight: 600; }
+  .filter-btn {
+    padding: 5px 12px;
+    border-radius: 6px;
+    border: 1px solid var(--border);
+    background: var(--bg2);
+    color: var(--text3);
+    font-family: 'Syne', sans-serif;
+    font-size: 12px; font-weight: 600;
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+  .filter-btn:hover, .filter-btn.active {
+    border-color: var(--accent);
+    color: var(--accent);
+    background: rgba(0,245,196,0.05);
+  }
+  .filter-btn.buy-active { border-color: var(--buy); color: var(--buy); background: rgba(0,245,196,0.05); }
+  .filter-btn.watch-active { border-color: var(--watch); color: var(--watch); background: rgba(245,158,11,0.05); }
+  .filter-btn.nogo-active { border-color: var(--nogo); color: var(--nogo); background: rgba(239,68,68,0.05); }
+  .search-input {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 5px 12px;
+    color: var(--text);
+    font-family: 'Syne', sans-serif;
+    font-size: 12px;
+    width: 200px;
+    outline: none;
+    transition: border-color 0.15s;
+  }
+  .search-input:focus { border-color: var(--accent); }
+  .search-input::placeholder { color: var(--text2); }
+
+  /* TOKEN TABLE */
+  .table-wrap {
+    overflow-y: auto;
+    padding: 16px 24px;
+  }
+  .table-wrap::-webkit-scrollbar { width: 4px; }
+  .table-wrap::-webkit-scrollbar-track { background: transparent; }
+  .table-wrap::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
+
+  table {
+    width: 100%; border-collapse: collapse;
+    font-size: 13px;
+  }
+  thead th {
+    padding: 8px 12px;
+    text-align: left;
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: var(--text2);
+    border-bottom: 1px solid var(--border);
+    white-space: nowrap;
+    cursor: pointer;
+    transition: color 0.15s;
+    font-family: 'Space Mono', monospace;
+  }
+  thead th:hover { color: var(--accent); }
+  tbody tr {
+    border-bottom: 1px solid rgba(26,37,64,0.5);
+    transition: background 0.15s;
+    cursor: pointer;
+    animation: fadeIn 0.3s ease forwards;
+    opacity: 0;
+  }
+  @keyframes fadeIn {
+    to { opacity: 1; }
+  }
+  tbody tr:hover { background: rgba(255,255,255,0.02); }
+  tbody tr.expanded { background: rgba(0,245,196,0.03); }
+  td {
+    padding: 12px 12px;
+    vertical-align: middle;
+    white-space: nowrap;
+  }
+
+  /* TOKEN NAME */
+  .token-name { font-weight: 700; font-size: 14px; }
+  .token-ticker {
+    font-family: 'Space Mono', monospace;
+    font-size: 10px;
+    color: var(--text2);
+    margin-top: 2px;
+  }
+  .token-age {
+    font-size: 10px;
+    color: var(--text2);
+    font-family: 'Space Mono', monospace;
+  }
+
+  /* FINAL SCORE */
+  .score-circle {
+    width: 44px; height: 44px;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'Space Mono', monospace;
+    font-size: 12px; font-weight: 700;
+    position: relative;
+  }
+  .score-high { background: rgba(0,245,196,0.1); color: var(--buy); border: 2px solid rgba(0,245,196,0.3); }
+  .score-mid { background: rgba(245,158,11,0.1); color: var(--watch); border: 2px solid rgba(245,158,11,0.3); }
+  .score-low { background: rgba(239,68,68,0.1); color: var(--nogo); border: 2px solid rgba(239,68,68,0.3); }
+
+  /* CATEGORY BADGE */
+  .badge {
+    padding: 3px 10px;
+    border-radius: 4px;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    font-family: 'Space Mono', monospace;
+  }
+  .badge-buy { background: rgba(0,245,196,0.12); color: var(--buy); border: 1px solid rgba(0,245,196,0.25); }
+  .badge-watch { background: rgba(245,158,11,0.12); color: var(--watch); border: 1px solid rgba(245,158,11,0.25); }
+  .badge-nogo { background: rgba(239,68,68,0.12); color: var(--nogo); border: 1px solid rgba(239,68,68,0.25); }
+
+  /* MINI SCORE BARS */
+  .mini-score { display: flex; align-items: center; gap: 6px; }
+  .mini-bar-wrap {
+    width: 50px; height: 4px;
+    background: var(--border);
+    border-radius: 2px;
+    overflow: hidden;
+  }
+  .mini-bar {
+    height: 100%; border-radius: 2px;
+    transition: width 0.6s ease;
+  }
+  .bar-green { background: var(--buy); }
+  .bar-yellow { background: var(--watch); }
+  .bar-red { background: var(--nogo); }
+  .mini-val {
+    font-family: 'Space Mono', monospace;
+    font-size: 10px;
+    color: var(--text3);
+    width: 24px;
+  }
+
+  /* CONTRACT */
+  .contract {
+    display: flex; align-items: center; gap: 6px;
+    font-family: 'Space Mono', monospace;
+    font-size: 10px; color: var(--text2);
+  }
+  .copy-btn {
+    background: var(--bg3);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 2px 6px;
+    cursor: pointer;
+    font-size: 10px;
+    color: var(--text3);
+    transition: all 0.15s;
+    font-family: 'Space Mono', monospace;
+  }
+  .copy-btn:hover { border-color: var(--accent); color: var(--accent); }
+  .copy-btn.copied { border-color: var(--buy); color: var(--buy); }
+
+  /* LINKS */
+  .links { display: flex; gap: 4px; }
+  .link-btn {
+    padding: 3px 7px;
+    border-radius: 4px;
+    border: 1px solid var(--border);
+    background: var(--bg2);
+    color: var(--text2);
+    font-size: 10px;
+    text-decoration: none;
+    cursor: pointer;
+    transition: all 0.15s;
+    font-family: 'Space Mono', monospace;
+  }
+  .link-btn:hover { border-color: var(--accent2); color: var(--accent); }
+
+  /* EXPANDED ROW */
+  .expand-row { display: none; }
+  .expand-row.open { display: table-row; }
+  .expand-cell {
+    padding: 0 12px 20px 12px;
+    background: rgba(0,245,196,0.02);
+    border-bottom: 1px solid var(--border);
+  }
+  .expand-inner {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 16px;
+    padding-top: 16px;
+  }
+  .expand-card {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 14px;
+  }
+  .expand-card h4 {
+    font-size: 10px; font-weight: 700;
+    text-transform: uppercase; letter-spacing: 1px;
+    color: var(--text2); margin-bottom: 12px;
+    font-family: 'Space Mono', monospace;
+  }
+  .score-row {
+    display: flex; justify-content: space-between; align-items: center;
+    margin-bottom: 8px;
+  }
+  .score-row-label { font-size: 12px; color: var(--text3); }
+  .score-bar-full {
+    width: 100%; height: 6px;
+    background: var(--border); border-radius: 3px;
+    overflow: hidden; margin-top: 4px;
+  }
+  .score-bar-fill { height: 100%; border-radius: 3px; transition: width 0.8s ease; }
+  .info-row {
+    display: flex; justify-content: space-between;
+    font-size: 12px; margin-bottom: 6px;
+  }
+  .info-label { color: var(--text2); }
+  .info-val { color: var(--text); font-weight: 600; font-family: 'Space Mono', monospace; font-size: 11px; }
+  .tag { padding: 2px 8px; border-radius: 3px; font-size: 10px; font-weight: 700; font-family: 'Space Mono', monospace; }
+  .tag-green { background: rgba(0,245,196,0.12); color: var(--buy); }
+  .tag-red { background: rgba(239,68,68,0.12); color: var(--nogo); }
+  .tag-yellow { background: rgba(245,158,11,0.12); color: var(--watch); }
+
+  /* SIDEBAR */
+  .sidebar {
+    border-left: 1px solid var(--border);
+    overflow-y: auto;
+    background: var(--bg);
+  }
+  .sidebar::-webkit-scrollbar { width: 4px; }
+  .sidebar::-webkit-scrollbar-thumb { background: var(--border); }
+  .sidebar-header {
+    padding: 16px 16px 12px;
+    border-bottom: 1px solid var(--border);
+    display: flex; align-items: center; gap: 8px;
+  }
+  .sidebar-header h3 { font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; color: var(--text2); font-family: 'Space Mono', monospace; }
+  .notif-item {
+    padding: 12px 16px;
+    border-bottom: 1px solid rgba(26,37,64,0.4);
+    animation: slideIn 0.4s ease;
+  }
+  @keyframes slideIn {
+    from { opacity: 0; transform: translateX(10px); }
+    to { opacity: 1; transform: translateX(0); }
+  }
+  .notif-top { display: flex; justify-content: space-between; align-items: flex-start; gap: 8px; margin-bottom: 4px; }
+  .notif-token { font-weight: 700; font-size: 13px; }
+  .notif-time { font-family: 'Space Mono', monospace; font-size: 9px; color: var(--text2); white-space: nowrap; }
+  .notif-msg { font-size: 11px; color: var(--text3); line-height: 1.4; }
+  .notif-record { font-size: 10px; margin-top: 4px; font-family: 'Space Mono', monospace; }
+  .notif-buy .notif-token { color: var(--buy); }
+  .notif-watch .notif-token { color: var(--watch); }
+  .notif-nogo .notif-token { color: var(--nogo); }
+
+  /* DEV SCORE */
+  .dev-tag { font-size: 11px; font-weight: 600; }
+  .dev-clean { color: var(--buy); }
+  .dev-unknown { color: var(--watch); }
+  .dev-flagged { color: var(--nogo); }
+
+  /* RESPONSIVE */
+  @media (max-width: 1100px) {
+    .main { grid-template-columns: 1fr; }
+    .sidebar { display: none; }
+  }
+
+  .refresh-bar {
+    height: 2px; background: var(--border);
+    position: relative; overflow: hidden;
+  }
+  .refresh-progress {
+    height: 100%; background: linear-gradient(90deg, var(--accent2), var(--accent));
+    animation: progress 5s linear infinite;
+  }
+  @keyframes progress {
+    from { width: 0; }
+    to { width: 100%; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo">
+    <div class="logo-icon">◈</div>
+    Sol<span>Radar</span>
+  </div>
+  <div class="header-stats">
+    <div class="stat-pill">
+      <div class="live-dot"></div>
+      <span id="liveCount">14 tokens live</span>
+    </div>
+    <div class="stat-pill">
+      ⟳ <span id="lastUpdate">Updated just now</span>
+    </div>
+    <div class="stat-pill" style="color: var(--accent); border-color: rgba(0,245,196,0.3);">
+      SOL $148.32
+    </div>
+  </div>
+</header>
+<div class="refresh-bar"><div class="refresh-progress"></div></div>
+
+<div class="main">
+  <!-- FILTERS -->
+  <div class="filters">
+    <input class="search-input" type="text" placeholder="🔍 Search token or address..." id="searchInput" oninput="filterTokens()">
+    <div class="filter-group">
+      <span class="filter-label">Category</span>
+      <button class="filter-btn active" onclick="setFilter('all',this)">All</button>
+      <button class="filter-btn" onclick="setFilter('BUY ZONE',this)">🟢 Buy Zone</button>
+      <button class="filter-btn" onclick="setFilter('WATCHING',this)">🟡 Watching</button>
+      <button class="filter-btn" onclick="setFilter('NO-GO',this)">🔴 No-Go</button>
+    </div>
+    <div class="filter-group">
+      <span class="filter-label">Sort</span>
+      <button class="filter-btn active" onclick="setSort('final',this)">Final Score</button>
+      <button class="filter-btn" onclick="setSort('hype',this)">Hype</button>
+      <button class="filter-btn" onclick="setSort('community',this)">Community</button>
+      <button class="filter-btn" onclick="setSort('age',this)">Newest</button>
+    </div>
+  </div>
+
+  <!-- TABLE -->
+  <div class="table-wrap">
+    <table id="tokenTable">
+      <thead>
+        <tr>
+          <th>Token</th>
+          <th>Final Score</th>
+          <th>Category</th>
+          <th>Potential</th>
+          <th>Community</th>
+          <th>Hype</th>
+          <th>Safety</th>
+          <th>Dev</th>
+          <th>Contract</th>
+          <th>Links</th>
+        </tr>
+      </thead>
+      <tbody id="tableBody"></tbody>
+    </table>
+  </div>
+
+  <!-- SIDEBAR -->
+  <div class="sidebar">
+    <div class="sidebar-header">
+      <div class="live-dot"></div>
+      <h3>Live Alerts</h3>
+    </div>
+    <div id="notifFeed"></div>
+  </div>
+</div>
+
+<script>
+const tokens = [
+  { name:"PepeSol", ticker:"PEPSOL", age:"2h", mcap:"Micro", address:"7xKX...mR9p", potential:91, community:87, hype:95, safety:78, dev:90, devTag:"CLEAN", lpLocked:true, mint:false, freeze:false, top10:8, vol:"$142K", liq:"$89K", holders:1240 },
+  { name:"MoonDog", ticker:"MDOG", age:"5h", mcap:"Micro", address:"3pQZ...nW2k", potential:85, community:79, hype:88, safety:82, dev:85, devTag:"CLEAN", lpLocked:true, mint:false, freeze:false, top10:11, vol:"$98K", liq:"$67K", holders:890 },
+  { name:"SolApe", ticker:"SAPE", age:"1h", mcap:"Early", address:"9mRT...cV5j", potential:78, community:92, hype:76, safety:70, dev:72, devTag:"UNKNOWN", lpLocked:true, mint:true, freeze:false, top10:13, vol:"$211K", liq:"$154K", holders:2100 },
+  { name:"WarpCat", ticker:"WCAT", age:"8h", mcap:"Early", address:"2kLP...xB8m", potential:72, community:68, hype:82, safety:75, dev:78, devTag:"CLEAN", lpLocked:true, mint:false, freeze:false, top10:9, vol:"$76K", liq:"$45K", holders:670 },
+  { name:"DegenFox", ticker:"DFOX", age:"12h", mcap:"Mid", address:"5nHJ...tQ3r", potential:65, community:71, hype:58, safety:80, dev:82, devTag:"CLEAN", lpLocked:true, mint:false, freeze:false, top10:10, vol:"$334K", liq:"$298K", holders:4500 },
+  { name:"SkullSOL", ticker:"SKULL", age:"30m", mcap:"Micro", address:"8cWE...pA1z", potential:88, community:55, hype:91, safety:42, dev:40, devTag:"FLAGGED", lpLocked:false, mint:true, freeze:true, top10:28, vol:"$55K", liq:"$12K", holders:320 },
+  { name:"ChadCoin", ticker:"CHAD", age:"3h", mcap:"Micro", address:"4fNB...rG6v", potential:82, community:88, hype:79, safety:85, dev:91, devTag:"CLEAN", lpLocked:true, mint:false, freeze:false, top10:7, vol:"$187K", liq:"$122K", holders:1870 },
+  { name:"RocketAI", ticker:"RKAI", age:"6h", mcap:"Early", address:"6vDK...oM4s", potential:76, community:74, hype:85, safety:68, dev:65, devTag:"UNKNOWN", lpLocked:true, mint:false, freeze:true, top10:16, vol:"$445K", liq:"$210K", holders:3200 },
+  { name:"SolPunk", ticker:"SPNK", age:"24h", mcap:"Mid", address:"1yFM...kN7t", potential:70, community:82, hype:65, safety:88, dev:87, devTag:"CLEAN", lpLocked:true, mint:false, freeze:false, top10:8, vol:"$892K", liq:"$567K", holders:8900 },
+  { name:"BasedBull", ticker:"BBULL", age:"4h", mcap:"Micro", address:"0rTC...wJ2u", potential:93, community:90, hype:97, safety:80, dev:94, devTag:"CLEAN", lpLocked:true, mint:false, freeze:false, top10:6, vol:"$178K", liq:"$98K", holders:1560 },
+  { name:"GigaFrog", ticker:"GFROG", age:"15h", mcap:"Early", address:"3mSV...dH5y", potential:68, community:65, hype:60, safety:72, dev:70, devTag:"UNKNOWN", lpLocked:true, mint:false, freeze:false, top10:14, vol:"$123K", liq:"$87K", holders:1100 },
+  { name:"NukeCoin", ticker:"NUKE", age:"45m", mcap:"Micro", address:"9pBX...eQ8w", potential:55, community:30, hype:72, safety:18, dev:15, devTag:"FLAGGED", lpLocked:false, mint:true, freeze:true, top10:42, vol:"$23K", liq:"$5K", holders:145 },
+  { name:"SolWolf", ticker:"SWOLF", age:"7h", mcap:"Early", address:"2gLR...iC3x", potential:80, community:76, hype:74, safety:78, dev:82, devTag:"CLEAN", lpLocked:true, mint:false, freeze:false, top10:12, vol:"$267K", liq:"$189K", holders:2700 },
+  { name:"MegaDoge", ticker:"MDOGE", age:"2d", mcap:"Mid", address:"7hQW...nP9b", potential:62, community:78, hype:55, safety:90, dev:88, devTag:"CLEAN", lpLocked:true, mint:false, freeze:false, top10:9, vol:"$1.2M", liq:"$890K", holders:12400 },
+];
+
+function finalScore(t) {
+  return Math.round(t.potential*0.40 + t.community*0.25 + t.hype*0.20 + t.safety*0.15);
+}
+function category(score) {
+  if(score >= 75) return 'BUY ZONE';
+  if(score >= 50) return 'WATCHING';
+  return 'NO-GO';
+}
+function scoreClass(score) {
+  if(score >= 75) return 'score-high';
+  if(score >= 50) return 'score-mid';
+  return 'score-low';
+}
+function badgeClass(cat) {
+  if(cat==='BUY ZONE') return 'badge-buy';
+  if(cat==='WATCHING') return 'badge-watch';
+  return 'badge-nogo';
+}
+function barClass(score) {
+  if(score >= 75) return 'bar-green';
+  if(score >= 50) return 'bar-yellow';
+  return 'bar-red';
+}
+function devClass(tag) {
+  if(tag==='CLEAN') return 'dev-clean';
+  if(tag==='FLAGGED') return 'dev-flagged';
+  return 'dev-unknown';
+}
+function devEmoji(tag) {
+  if(tag==='CLEAN') return '✅';
+  if(tag==='FLAGGED') return '🚨';
+  return '⚠️';
+}
+
+let currentFilter = 'all';
+let currentSort = 'final';
+let expandedIdx = null;
+
+function setFilter(f, btn) {
+  currentFilter = f;
+  document.querySelectorAll('.filter-group .filter-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  renderTable();
+}
+function setSort(s, btn) {
+  currentSort = s;
+  document.querySelectorAll('.filter-group ~ .filter-group .filter-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  renderTable();
+}
+
+function filterTokens() { renderTable(); }
+
+function copyAddress(addr, btn) {
+  navigator.clipboard.writeText(addr).then(() => {
+    btn.textContent = '✓ Copied';
+    btn.classList.add('copied');
+    setTimeout(() => { btn.textContent = '📋 Copy'; btn.classList.remove('copied'); }, 1500);
+  });
+}
+
+function toggleExpand(idx) {
+  if(expandedIdx === idx) { expandedIdx = null; }
+  else { expandedIdx = idx; }
+  renderTable();
+}
+
+function renderTable() {
+  const search = document.getElementById('searchInput').value.toLowerCase();
+  let list = tokens.map((t,i) => ({...t, idx:i, final: finalScore(t), cat: category(finalScore(t))}));
+
+  if(currentFilter !== 'all') list = list.filter(t => t.cat === currentFilter);
+  if(search) list = list.filter(t => t.name.toLowerCase().includes(search) || t.ticker.toLowerCase().includes(search) || t.address.toLowerCase().includes(search));
+
+  if(currentSort === 'final') list.sort((a,b) => b.final - a.final);
+  else if(currentSort === 'hype') list.sort((a,b) => b.hype - a.hype);
+  else if(currentSort === 'community') list.sort((a,b) => b.community - a.community);
+  else if(currentSort === 'age') list.sort((a,b) => a.idx - b.idx);
+
+  const tbody = document.getElementById('tableBody');
+  tbody.innerHTML = '';
+
+  list.forEach((t, rowIdx) => {
+    const isExpanded = expandedIdx === t.idx;
+    const delay = rowIdx * 40;
+
+    const tr = document.createElement('tr');
+    tr.className = isExpanded ? 'expanded' : '';
+    tr.style.animationDelay = delay + 'ms';
+    tr.onclick = () => toggleExpand(t.idx);
+    tr.innerHTML = `
+      <td>
+        <div class="token-name">${t.name}</div>
+        <div class="token-ticker">$${t.ticker}</div>
+        <div class="token-age">${t.age} · ${t.mcap}</div>
+      </td>
+      <td><div class="score-circle ${scoreClass(t.final)}">${t.final}%</div></td>
+      <td><span class="badge ${badgeClass(t.cat)}">${t.cat}</span></td>
+      <td>
+        <div class="mini-score">
+          <div class="mini-bar-wrap"><div class="mini-bar ${barClass(t.potential)}" style="width:${t.potential}%"></div></div>
+          <span class="mini-val">${t.potential}</span>
+        </div>
+      </td>
+      <td>
+        <div class="mini-score">
+          <div class="mini-bar-wrap"><div class="mini-bar ${barClass(t.community)}" style="width:${t.community}%"></div></div>
+          <span class="mini-val">${t.community}</span>
+        </div>
+      </td>
+      <td>
+        <div class="mini-score">
+          <div class="mini-bar-wrap"><div class="mini-bar ${barClass(t.hype)}" style="width:${t.hype}%"></div></div>
+          <span class="mini-val">${t.hype}</span>
+        </div>
+      </td>
+      <td>
+        <div class="mini-score">
+          <div class="mini-bar-wrap"><div class="mini-bar ${barClass(t.safety)}" style="width:${t.safety}%"></div></div>
+          <span class="mini-val">${t.safety}</span>
+        </div>
+      </td>
+      <td><span class="dev-tag ${devClass(t.devTag)}">${devEmoji(t.devTag)} ${t.devTag}</span></td>
+      <td>
+        <div class="contract">
+          <span>${t.address}</span>
+          <button class="copy-btn" onclick="event.stopPropagation();copyAddress('${t.address}',this)">📋 Copy</button>
+        </div>
+      </td>
+      <td>
+        <div class="links">
+          <a class="link-btn" href="https://solscan.io/token/${t.address}" target="_blank" onclick="event.stopPropagation()">Scan</a>
+          <a class="link-btn" href="https://dexscreener.com/solana/${t.address}" target="_blank" onclick="event.stopPropagation()">DEX</a>
+          <span class="link-btn" onclick="event.stopPropagation()">TG</span>
+        </div>
+      </td>
+    `;
+    tbody.appendChild(tr);
+
+    // EXPANDED DETAIL ROW
+    const expandTr = document.createElement('tr');
+    expandTr.className = 'expand-row' + (isExpanded ? ' open' : '');
+    const expandTd = document.createElement('td');
+    expandTd.className = 'expand-cell';
+    expandTd.colSpan = 10;
+    expandTd.innerHTML = `
+      <div class="expand-inner">
+        <div class="expand-card">
+          <h4>Score Breakdown</h4>
+          ${[['Potential',t.potential],['Community',t.community],['Hype',t.hype],['Safety',t.safety],['Dev',t.dev]].map(([label,val])=>`
+            <div class="score-row"><span class="score-row-label">${label}</span><span style="font-family:'Space Mono',monospace;font-size:11px;color:var(--text)">${val}%</span></div>
+            <div class="score-bar-full"><div class="score-bar-fill ${barClass(val)}" style="width:${val}%"></div></div>
+            <div style="margin-bottom:8px"></div>
+          `).join('')}
+        </div>
+        <div class="expand-card">
+          <h4>Token Safety</h4>
+          <div class="info-row"><span class="info-label">Top 10 Holders</span><span class="info-val ${t.top10<=15?'':''}"><span class="tag ${t.top10<=10?'tag-green':t.top10<=15?'tag-yellow':'tag-red'}">${t.top10}%</span></span></div>
+          <div class="info-row"><span class="info-label">LP Lock</span><span class="info-val"><span class="tag ${t.lpLocked?'tag-green':'tag-red'}">${t.lpLocked?'🔒 LOCKED':'🔓 UNLOCKED'}</span></span></div>
+          <div class="info-row"><span class="info-label">Mint Authority</span><span class="info-val"><span class="tag ${!t.mint?'tag-green':'tag-red'}">${t.mint?'⚠️ ENABLED':'✅ DISABLED'}</span></span></div>
+          <div class="info-row"><span class="info-label">Freeze Authority</span><span class="info-val"><span class="tag ${!t.freeze?'tag-green':'tag-red'}">${t.freeze?'⚠️ ENABLED':'✅ DISABLED'}</span></span></div>
+          <div class="info-row"><span class="info-label">Dev Wallet</span><span class="info-val"><span class="tag ${t.devTag==='CLEAN'?'tag-green':t.devTag==='FLAGGED'?'tag-red':'tag-yellow'}">${devEmoji(t.devTag)} ${t.devTag}</span></span></div>
+        </div>
+        <div class="expand-card">
+          <h4>Market Data</h4>
+          <div class="info-row"><span class="info-label">Volume 24h</span><span class="info-val">${t.vol}</span></div>
+          <div class="info-row"><span class="info-label">Liquidity</span><span class="info-val">${t.liq}</span></div>
+          <div class="info-row"><span class="info-label">Holders</span><span class="info-val">${t.holders.toLocaleString()}</span></div>
+          <div class="info-row"><span class="info-label">Market Cap</span><span class="info-val">${t.mcap}</span></div>
+          <div class="info-row"><span class="info-label">Token Age</span><span class="info-val">${t.age}</span></div>
+          <div class="info-row"><span class="info-label">Final Score</span><span class="info-val" style="color:var(--accent);font-size:16px">${t.final}%</span></div>
+        </div>
+      </div>
+    `;
+    expandTr.appendChild(expandTd);
+    tbody.appendChild(expandTr);
+  });
+}
+
+// NOTIFICATIONS SIDEBAR
+const notifMessages = [
+  { token:"BasedBull", ticker:"BBULL", score:95, cat:"BUY ZONE", msg:"Telegram spiking — 3x mentions in 10 mins", record:"12/12 successful calls", type:"buy" },
+  { token:"PepeSol", ticker:"PEPSOL", score:92, cat:"BUY ZONE", msg:"Whale wallet 0x9f...3a just bought $45K", record:"8/10 successful calls", type:"buy" },
+  { token:"ChadCoin", ticker:"CHAD", score:88, cat:"BUY ZONE", msg:"KOL with 180K followers just tweeted", record:"Community: verified 9/10", type:"buy" },
+  { token:"RocketAI", ticker:"RKAI", score:74, cat:"WATCHING", msg:"Volume up 3x in last 30 mins", record:"5/8 successful calls", type:"watch" },
+  { token:"WarpCat", ticker:"WCAT", score:74, cat:"WATCHING", msg:"New holders +180 in last hour", record:"Community: tracking", type:"watch" },
+  { token:"SkullSOL", ticker:"SKULL", score:65, cat:"WATCHING", msg:"⚠️ Mint authority still enabled — caution", record:"Dev: FLAGGED history", type:"watch" },
+  { token:"NukeCoin", ticker:"NUKE", score:28, cat:"NO-GO", msg:"🚨 Top 10 holders = 42% — possible rug", record:"Dev wallet: RUG HISTORY", type:"nogo" },
+];
+
+function renderNotifs() {
+  const feed = document.getElementById('notifFeed');
+  feed.innerHTML = '';
+  notifMessages.forEach((n, i) => {
+    const div = document.createElement('div');
+    div.className = `notif-item notif-${n.type}`;
+    div.style.animationDelay = (i * 100) + 'ms';
+    const mins = [1,3,5,8,12,15,22][i];
+    div.innerHTML = `
+      <div class="notif-top">
+        <span class="notif-token">$${n.ticker} — ${n.score}%</span>
+        <span class="notif-time">${mins}m ago</span>
+      </div>
+      <div class="notif-msg">${n.msg}</div>
+      <div class="notif-record" style="color:var(--text2)">${n.record}</div>
+    `;
+    feed.appendChild(div);
+  });
+}
+
+// LIVE SCORE SIMULATION
+function simulateUpdates() {
+  tokens.forEach(t => {
+    t.potential = Math.max(10, Math.min(99, t.potential + (Math.random()-0.5)*3));
+    t.community = Math.max(10, Math.min(99, t.community + (Math.random()-0.5)*2));
+    t.hype = Math.max(10, Math.min(99, t.hype + (Math.random()-0.5)*4));
+    t.potential = Math.round(t.potential);
+    t.community = Math.round(t.community);
+    t.hype = Math.round(t.hype);
+  });
+  document.getElementById('lastUpdate').textContent = 'Updated just now';
+  renderTable();
+}
+
+// UPDATE TIMER
+let seconds = 0;
+setInterval(() => {
+  seconds++;
+  if(seconds >= 5) {
+    simulateUpdates();
+    seconds = 0;
+  } else {
+    document.getElementById('lastUpdate').textContent = `${seconds}s ago`;
+  }
+}, 1000);
+
+// INIT
+renderTable();
+renderNotifs();
+</script>
+</body>
+</html>
