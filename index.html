@@ -758,6 +758,15 @@ async function fetchMarket(){
   updateMarketUI();
 }
 
+function updateMarketFallback(){
+  // Called when market fetch fails — show safe defaults
+  market.solPrice=0; market.solChg=0; market.btcPrice=0;
+  market.fearGreed=50; market.fgLabel='Unknown';
+  market.swHours=6; market.timing='warn';
+  market.timingLabel='⚠️ Market data unavailable';
+  updateMarketUI();
+}
+
 function updateMarketUI(){
   const sol=market.solChg,btc=market.btcChg,fg=market.fearGreed;
   document.getElementById('solPrice').textContent='$'+market.solPrice.toFixed(2);
@@ -936,23 +945,7 @@ async function discoverWallets(){
 // ============================================================
 // DEXSCREENER MULTI-ENDPOINT FETCH
 // ============================================================
-async function fetchDex(){
-  let all=[];
-  const urls=[
-    'https://api.dexscreener.com/latest/dex/pairs/solana',
-    'https://api.dexscreener.com/latest/dex/search?q=pump',
-    'https://api.dexscreener.com/latest/dex/search?q=solana+meme',
-  ];
-  const results=await Promise.allSettled(urls.map(u=>fetch(u).then(r=>r.json())));
-  results.forEach(r=>{
-    if(r.status==='fulfilled'){
-      (r.value?.pairs||[]).filter(p=>p.chainId==='solana').forEach(p=>{
-        if(!all.find(x=>x.pairAddress===p.pairAddress))all.push(p);
-      });
-    }
-  });
-  return all;
-}
+// fetchDex now inline in fetchAll
 
 // ============================================================
 // PAIR → BASE OBJECT
@@ -1045,13 +1038,50 @@ async function fetchAll(){
   document.getElementById('apiSt').textContent='⟳ Scanning';
   document.getElementById('alpha-load').style.display='flex';
   document.getElementById('alphaGrid').style.display='none';
-  await fetchMarket();
+
+  // Always show fallback tokens immediately so screen is never blank
+  try{ await fetchMarket(); }catch(e){}
   simulateWalletActivity();
+  gemTokens = fallbackGems();
+  waveTokens = fallbackWave();
+  alphaTokens = buildWalletAlpha();
+  showCounts();
+  // Show fallback data right away
+  document.getElementById('alpha-load').style.display='none';
+  document.getElementById('alphaGrid').style.display='grid';
+  renderAlpha(); renderGems(); renderWave(); renderWalletIntel(); renderFeed();
+
+  // Now fetch real data in background
+  document.getElementById('apiSt').textContent='⟳ Fetching live data...';
   let pairs=[];
   try{
-    document.getElementById('alphaTxt').innerHTML='Fetching multi-endpoint Solana pairs...<br><small style="opacity:0.5">DexScreener · Pump.fun · Boosts</small>';
-    pairs=await fetchDex();
-  }catch(e){}
+    const urls=[
+      'https://api.dexscreener.com/latest/dex/pairs/solana',
+      'https://api.dexscreener.com/latest/dex/search?q=pump',
+      'https://api.dexscreener.com/latest/dex/search?q=solana+meme',
+    ];
+    const results = await Promise.allSettled(
+      urls.map(u=>fetch(u,{signal:AbortSignal.timeout(8000)}).then(r=>r.json()))
+    );
+    results.forEach(r=>{
+      if(r.status==='fulfilled'){
+        const ps=r.value?.pairs||[];
+        ps.filter(p=>p.chainId==='solana').forEach(p=>{
+          if(!pairs.find(x=>x.pairAddress===p.pairAddress))pairs.push(p);
+        });
+      }
+    });
+  }catch(e){ console.warn('DexScreener failed, keeping fallback data'); }
+
+  if(pairs.length===0){
+    // No live data — stay with fallbacks but mark as offline
+    document.getElementById('apiSt').textContent='⚠️ Offline (fallback)';
+    showCounts(); renderAlpha(); renderGems(); renderWave(); renderFeed();
+    await discoverWallets();
+    return;
+  }
+
+  // Got real data — filter and process
   const stables=['usdc','usdt','wsol','busd','dai'];
   const clean=pairs.filter(p=>{
     const mc=getRealMC(p);
@@ -1059,7 +1089,7 @@ async function fetchAll(){
     const tk=(p.baseToken?.symbol||'').toLowerCase();
     return mc>=MC_GEM_MIN&&liq>=1000&&!stables.includes(tk)&&p.baseToken?.address;
   });
-  // Wallet alpha tokens
+
   const walletAddrs=new Set(recentWalletBuys.filter(b=>b.action==='BUY').map(b=>b.address));
   const alphaPairs=clean.filter(p=>walletAddrs.has(p.baseToken?.address));
   const gemPairs=clean.filter(p=>{const mc=getRealMC(p);return mc>=MC_GEM_MIN&&mc<=MC_GEM_MAX;})
@@ -1070,56 +1100,73 @@ async function fetchAll(){
     const ch24=+(p.priceChange?.h24)||0,ch1=+(p.priceChange?.h1)||0;
     return mc>=MC_WAVE_MIN&&mc<=MC_WAVE_MAX&&ageH!==null&&ageH>=market.swHours&&ageH<=24&&ch24>=40&&ch1<-3;
   }).slice(0,10);
-  document.getElementById('alphaTxt').innerHTML='Checking LP, CoinGecko, Telegram, bots...<br><small style="opacity:0.5">Running all 5 intelligence layers</small>';
-  // Process all in parallel
-  const[aT,gT,wT]=await Promise.all([
-    Promise.all(alphaPairs.slice(0,6).map(p=>processToken(p,'alpha'))),
-    Promise.all(gemPairs.map(p=>processToken(p,'gem'))),
-    Promise.all(wavePairs.map(p=>processToken(p,'wave'))),
+
+  document.getElementById('apiSt').textContent='⟳ Running checks...';
+
+  // Process with LP/CG/TG checks in parallel — with timeout safety
+  const safeProcess = (p,type) => Promise.race([
+    processToken(p,type),
+    new Promise(res=>setTimeout(()=>res(null),6000))
   ]);
-  // Build synthetic alpha from wallet buys
-  const walletAlpha=await Promise.all(
-    recentWalletBuys.filter(b=>b.action==='BUY').map(async b=>{
-      const ws=recentWalletBuys.filter(x=>x.address===b.address&&x.action==='BUY').map(x=>x.wallet);
-      const nar=getNarrative(b.token,b.token);
-      const timing=getTiming({insidersAdding:false,insidersHolding:true,insidersSelling:false,volumeReviving:false,accumPhase:false,cgListed:false});
-      const posSize=getPosSize(72,ws.length,false);
-      return{
-        address:b.address,name:b.token,ticker:b.token,logo:'🚨',
-        mc:b.mcAtBuy,v24:0,v1h:0,v6h:0,liq:0,price:0,
-        ch24:0,ch6:0,ch1:0,b24:0,s24:0,b1h:0,s1h:0,
-        ageH:1,ageLabel:'<1h',
-        twitter:'',telegram:'',hasTwitter:false,hasTelegram:false,
-        boostActive:0,inDemandZone:false,volumeReviving:false,
-        narrative:nar,virality:50,
-        bot:{level:'LOW',label:'✅ KOL Signal',safe:true},
-        cabal:{detected:false,label:''},
-        holderPsych:{dhPct:60,mhPct:30,phPct:10,verdict:'DIAMOND HANDS 💎',verdictColor:'var(--green)',desc:'KOL buying — strong hands signal',sellPressure1h:0.2,lowSellPressure:true},
-        accumPhase:{phase:'NONE',label:'',desc:'',color:'',score:0},
-        pairUrl:`https://dexscreener.com/solana/${b.address}`,
-        addrShort:b.address.slice(0,4)+'...'+b.address.slice(-4),
-        community:62,narrative_score:nar.score,hyping:65,safety:65,
-        final:76,cat:'BUY ZONE',
-        top10Pct:null,lpLocked:null,mint:false,rugVerdict:'UNKNOWN',
-        tgMembers:null,alphaWallets:ws,alphaStrength:ws.length,
-        cgData:{listed:false},
-        timing,posSize,
-        insidersHolding:true,insidersAdding:false,insidersSelling:false,
-        exitSignals:[],
-        isAlpha:true,walletBuy:b,
-        desc:`${ws[0]?.name||'KOL'} ${ws.length>1?'+ '+(ws.length-1)+' more ':''} just bought · ${fmc(b.mcAtBuy)} MC`,
-      };
-    })
-  );
-  alphaTokens=[...walletAlpha,...aT.filter(Boolean)].filter((t,i,a)=>a.findIndex(x=>x.address===t.address)===i);
-  gemTokens=gT.filter(Boolean);
-  waveTokens=wT.filter(Boolean);
-  if(!gemTokens.length)gemTokens=fallbackGems();
-  if(!waveTokens.length)waveTokens=fallbackWave();
+
+  const[aT,gT,wT]=await Promise.all([
+    Promise.all(alphaPairs.slice(0,6).map(p=>safeProcess(p,'alpha'))),
+    Promise.all(gemPairs.map(p=>safeProcess(p,'gem'))),
+    Promise.all(wavePairs.map(p=>safeProcess(p,'wave'))),
+  ]);
+
+  const walletAlpha = buildWalletAlpha();
+  const realAlpha = [...walletAlpha, ...aT.filter(Boolean)].filter((t,i,a)=>a.findIndex(x=>x.address===t.address)===i);
+  const realGems = gT.filter(Boolean);
+  const realWave = wT.filter(Boolean);
+
+  // Only override fallbacks if we got real results
+  if(realAlpha.length) alphaTokens = realAlpha;
+  if(realGems.length) gemTokens = realGems;
+  if(realWave.length) waveTokens = realWave;
+
   cgVerified=[...alphaTokens,...gemTokens,...waveTokens].filter(t=>t.cgData?.listed).length;
   document.getElementById('cgVerCount').textContent=cgVerified;
-  document.getElementById('alpha-load').style.display='none';
-  document.getElementById('alphaGrid').style.display='grid';
+  document.getElementById('apiSt').textContent='✅ Live';
+  showCounts();
+  renderAlpha(); renderGems(); renderWave(); renderWalletIntel(); renderFeed();
+  await discoverWallets();
+}
+
+function buildWalletAlpha(){
+  return recentWalletBuys.filter(b=>b.action==='BUY').map(b=>{
+    const ws=recentWalletBuys.filter(x=>x.address===b.address&&x.action==='BUY').map(x=>x.wallet);
+    const nar=getNarrative(b.token,b.token);
+    const timing=getTiming({insidersAdding:false,insidersHolding:true,insidersSelling:false,volumeReviving:false,accumPhase:false,cgListed:false});
+    const posSize=getPosSize(72,ws.length,false);
+    return{
+      address:b.address,name:b.token,ticker:b.token,logo:'🚨',
+      mc:b.mcAtBuy,v24:0,v1h:0,v6h:0,liq:0,price:0,
+      ch24:0,ch6:0,ch1:0,b24:0,s24:0,b1h:0,s1h:0,
+      ageH:1,ageLabel:'<1h',
+      twitter:'',telegram:'',hasTwitter:false,hasTelegram:false,
+      boostActive:0,inDemandZone:false,volumeReviving:false,
+      narrative:nar,virality:50,
+      bot:{level:'LOW',label:'✅ KOL Signal',safe:true},
+      cabal:{detected:false,label:''},
+      holderPsych:{dhPct:60,mhPct:30,phPct:10,verdict:'DIAMOND HANDS 💎',verdictColor:'var(--green)',desc:'KOL buying — strong hands signal',sellPressure1h:0.2,lowSellPressure:true},
+      accumPhase:{phase:'NONE',label:'',desc:'',color:'',score:0},
+      pairUrl:`https://dexscreener.com/solana/${b.address}`,
+      addrShort:b.address.slice(0,4)+'...'+b.address.slice(-4),
+      community:62,narrative_score:nar.score,hyping:65,safety:65,
+      final:76,cat:'BUY ZONE',
+      top10Pct:null,lpLocked:null,mint:false,rugVerdict:'UNKNOWN',
+      tgMembers:null,alphaWallets:ws,alphaStrength:ws.length,
+      cgData:{listed:false},
+      timing,posSize,
+      insidersHolding:true,insidersAdding:false,insidersSelling:false,
+      exitSignals:[],isAlpha:true,walletBuy:b,
+      desc:`${ws[0]?.name||'KOL'} ${ws.length>1?'+ '+(ws.length-1)+' more':''} just bought · ${fmc(b.mcAtBuy)} MC`,
+    };
+  });
+}
+
+function showCounts(){
   document.getElementById('alphaCount').textContent=alphaTokens.length;
   document.getElementById('gemCount').textContent=gemTokens.length;
   document.getElementById('waveCount').textContent=waveTokens.length;
@@ -1128,10 +1175,8 @@ async function fetchAll(){
   document.getElementById('tc-wave').textContent=waveTokens.filter(t=>t.cat==='BUY ZONE').length;
   document.getElementById('tc-wallets').textContent=provenWallets.length;
   document.getElementById('liveCount').textContent=(alphaTokens.length+gemTokens.length+waveTokens.length)+' tokens';
-  document.getElementById('apiSt').textContent='✅ Live';
-  renderAlpha();renderGems();renderWave();renderWalletIntel();renderFeed();
-  await discoverWallets();
 }
+
 
 async function processToken(pair,type){
   const t=pairBase(pair);
@@ -1344,18 +1389,22 @@ function factorsHTML(t){
 }
 
 function cfooterHTML(t){
+  const dexUrl = t.pairUrl || ('https://dexscreener.com/solana/'+t.address);
+  const fullAddr = t.address || '';
+  const shortAddr = t.addrShort || (fullAddr ? fullAddr.slice(0,6)+'...'+fullAddr.slice(-6) : 'N/A');
   return`<div class="cfooter">
-    <div style="display:flex;align-items:center;gap:3px">
-      <span style="font-family:'DM Mono',monospace;font-size:8px;color:var(--text2)">${t.addrShort}</span>
-      <button class="ccopy" onclick="copyAddr('${t.address}',this)">📋</button>
+    <div style="display:flex;align-items:center;gap:4px;flex-wrap:wrap">
+      <button class="ccopy-ca" onclick="copyAddr('${fullAddr}',this)">📋 Copy CA</button>
+      <span style="font-family:'DM Mono',monospace;font-size:8px;color:var(--text2);cursor:pointer;user-select:all" title="${fullAddr}">${shortAddr}</span>
     </div>
     <div class="clinks">
+      <a class="clink clink-dex" href="${dexUrl}" target="_blank">📈 DEX</a>
+      <a class="clink" href="https://pump.fun/coin/${fullAddr}" target="_blank" style="color:var(--purple);border-color:rgba(156,95,255,0.3)">🔥 Pump</a>
+      <a class="clink" href="https://birdeye.so/token/${fullAddr}" target="_blank">🦅</a>
       ${t.hasTwitter?`<a class="clink" href="${t.twitter}" target="_blank">𝕏</a>`:''}
       ${t.hasTelegram?`<a class="clink" href="${t.telegram}" target="_blank">TG</a>`:''}
-      ${t.cgData?.listed?`<a class="clink" href="https://coingecko.com/en/coins/${t.cgData.cgId||''}" target="_blank" style="color:var(--gold);border-color:rgba(255,215,0,0.3)">🦎CG</a>`:''}
-      <a class="clink pump" href="https://pump.fun/coin/${t.address}" target="_blank">PUMP</a>
-      <a class="clink" href="${t.pairUrl}" target="_blank">DEX</a>
-      <a class="clink" href="https://kolscan.io" target="_blank">KOL</a>
+      ${t.cgData?.listed?`<a class="clink" href="https://coingecko.com/en/coins/${t.cgData.cgId||''}" target="_blank" style="color:var(--gold);border-color:rgba(255,215,0,0.3)">🦎</a>`:''}
+      <a class="clink" href="https://solscan.io/token/${fullAddr}" target="_blank">Scan</a>
     </div>
   </div>`;
 }
