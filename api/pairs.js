@@ -36,7 +36,7 @@ module.exports = async function handler(req, res) {
       } catch(e) {}
     }
 
-    const MC_MIN=5000,MC_MAX=50000,VOL_MIN=30000,VOL_MAX=200000,AGE_MIN=24,AGE_MAX=720,DUMP_MIN=80,PEAK_MIN=800000;
+    const MC_MIN=1000,MC_MAX=200000,VOL_MIN=10000,VOL_MAX=500000,AGE_MIN=1,AGE_MAX=720,DUMP_MIN=50,PEAK_MIN=200000;
     const stables=['usdc','usdt','wsol','busd','dai','usds'];
 
     const filtered = all.filter(p => {
