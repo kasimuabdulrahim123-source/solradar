@@ -198,7 +198,7 @@ const fmc=n=>{if(!n||isNaN(n))return'N/A';if(n>=1e6)return'$'+(n/1e6).toFixed(2)
 let tokens=[], activeF='all', market={solPrice:0,solChg:0,btcChg:0,fearGreed:50,fgLabel:'Neutral',timing:'warn',timingLabel:'⟳ Loading...'}, cdSecs=300;
 
 // BASE URL — points to Vercel API routes when hosted, relative when local
-const BASE = '';
+const BASE = "";
 
 async function fetchMarket() {
   try {
@@ -238,13 +238,11 @@ async function fetchAll() {
       if(t) enriched.push(t);
     }
     enriched.sort((a,b)=>{const o={'BUY ZONE':0,'WATCHING':1,'WAIT':2};return(o[a.cat]||1)-(o[b.cat]||1)||b.score-a.score;});
-    tokens = enriched.length ? enriched : noTokensFound(d.filtered);
   } catch(e) {
     console.error('Fetch error:', e);
     tokens = demoTokens();
   }
   updateSummary();
-  document.getElementById('apiSt').textContent = tokens[0]?._demo ? '⚠️ Demo' : '✅ Live';
   document.getElementById('loadDiv').style.display='none';
   document.getElementById('grid').style.display='grid';
   renderGrid();
