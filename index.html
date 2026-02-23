@@ -198,9 +198,7 @@ const fmc=n=>{if(!n||isNaN(n))return'N/A';if(n>=1e6)return'$'+(n/1e6).toFixed(2)
 let tokens=[], activeF='all', market={solPrice:0,solChg:0,btcChg:0,fearGreed:50,fgLabel:'Neutral',timing:'warn',timingLabel:'⟳ Loading...'}, cdSecs=300;
 
 // BASE URL — points to Vercel API routes when hosted, relative when local
-const BASE = window.location.hostname === 'localhost' || window.location.protocol === 'file:' 
-  ? 'https://YOUR-APP.vercel.app'  // Will be replaced after deploy
-  : '';
+const BASE = '';
 
 async function fetchMarket() {
   try {
