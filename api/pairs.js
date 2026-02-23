@@ -1,7 +1,22 @@
+const https = require('https');
+
+function get(url) {
+  return new Promise((resolve, reject) => {
+    https.get(url, {
+      headers: { 'User-Agent': 'Mozilla/5.0' }
+    }, (res) => {
+      let data = '';
+      res.on('data', chunk => data += chunk);
+      res.on('end', () => {
+        try { resolve(JSON.parse(data)); }
+        catch(e) { resolve({}); }
+      });
+    }).on('error', reject);
+  });
+}
+
 module.exports = async function handler(req, res) {
   res.setHeader('Access-Control-Allow-Origin', '*');
-  res.setHeader('Access-Control-Allow-Methods', 'GET');
-
   try {
     const endpoints = [
       'https://api.dexscreener.com/latest/dex/search?q=pump+solana',
@@ -12,8 +27,7 @@ module.exports = async function handler(req, res) {
     let all = [];
     for (const url of endpoints) {
       try {
-        const r = await fetch(url);
-        const d = await r.json();
+        const d = await get(url);
         (d?.pairs || [])
           .filter(p => p.chainId === 'solana')
           .forEach(p => {
@@ -49,3 +63,4 @@ module.exports = async function handler(req, res) {
   } catch(e) {
     res.status(500).json({error:e.message});
   }
+}
