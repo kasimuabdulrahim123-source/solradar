@@ -45,7 +45,6 @@ header{position:sticky;top:0;z-index:100;background:rgba(4,6,13,0.98);backdrop-f
 .fb{padding:3px 7px;border-radius:3px;border:1px solid var(--border2);background:var(--bg3);color:var(--text3);font-size:8px;font-weight:700;font-family:'DM Mono',monospace;cursor:pointer;transition:all 0.12s;}
 .fb:hover,.fb.act{border-color:var(--cyan);color:var(--cyan);background:rgba(0,229,255,0.06);}
 .rbtn{margin-left:auto;padding:4px 11px;border-radius:4px;border:1px solid rgba(0,229,255,0.3);background:rgba(0,229,255,0.06);color:var(--cyan);font-family:'DM Mono',monospace;font-size:9px;cursor:pointer;font-weight:700;}
-.rbtn:hover{background:rgba(0,229,255,0.14);}
 .cnt{padding:2px 6px;border-radius:8px;font-family:'DM Mono',monospace;font-size:8px;background:rgba(0,229,255,0.08);border:1px solid rgba(0,229,255,0.18);color:var(--cyan);}
 .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(340px,1fr));gap:10px;padding:10px 14px 20px;}
 .card{background:var(--bg2);border:1px solid rgba(0,229,255,0.16);border-radius:10px;padding:11px;position:relative;overflow:hidden;animation:cIn 0.3s ease forwards;opacity:0;}
@@ -55,11 +54,8 @@ header{position:sticky;top:0;z-index:100;background:rgba(4,6,13,0.98);backdrop-f
 .card.top{border-color:rgba(0,229,255,0.3);background:rgba(0,229,255,0.014);}
 .abar{display:flex;align-items:center;gap:4px;padding:6px 8px;background:rgba(0,229,255,0.04);border:1px solid rgba(0,229,255,0.14);border-radius:6px;margin-bottom:9px;}
 .btn-copy{padding:4px 9px;border-radius:4px;border:1px solid rgba(0,229,255,0.4);background:rgba(0,229,255,0.08);color:var(--cyan);font-family:'DM Mono',monospace;font-size:9px;font-weight:700;cursor:pointer;flex-shrink:0;}
-.btn-copy:hover{background:rgba(0,229,255,0.18);}
 .btn-dex{padding:4px 9px;border-radius:4px;border:1px solid rgba(13,255,140,0.4);background:rgba(13,255,140,0.06);color:var(--green);font-family:'DM Mono',monospace;font-size:9px;font-weight:700;text-decoration:none;flex-shrink:0;}
-.btn-dex:hover{background:rgba(13,255,140,0.14);}
-.ca-txt{font-family:'DM Mono',monospace;font-size:8px;color:var(--text2);flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:pointer;padding:2px 4px;border-radius:3px;}
-.ca-txt:hover{color:var(--cyan);}
+.ca-txt{font-family:'DM Mono',monospace;font-size:8px;color:var(--text2);flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:pointer;padding:2px 4px;}
 .ct{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:8px;}
 .ctl{display:flex;align-items:center;gap:7px;}
 .clogo{width:34px;height:34px;border-radius:50%;background:var(--bg3);border:1px solid var(--border2);display:flex;align-items:center;justify-content:center;font-size:15px;flex-shrink:0;}
@@ -94,11 +90,6 @@ header{position:sticky;top:0;z-index:100;background:rgba(4,6,13,0.98);backdrop-f
 .hbar-d{background:var(--green);}.hbar-m{background:var(--yellow);}.hbar-p{background:var(--red);}
 .hverdict{font-family:'DM Mono',monospace;font-size:8px;font-weight:700;}
 .hdesc{font-family:'DM Mono',monospace;font-size:7px;color:var(--text3);margin-top:1px;line-height:1.4;}
-.accum-box{padding:5px 7px;border-radius:5px;margin-bottom:5px;}
-.acc-yes{background:rgba(0,229,255,0.03);border:1px solid rgba(0,229,255,0.18);}
-.acc-early{background:rgba(255,194,51,0.03);border:1px solid rgba(255,194,51,0.18);}
-.acc-t{font-family:'DM Mono',monospace;font-size:8px;font-weight:700;margin-bottom:2px;}
-.acc-d{font-family:'DM Mono',monospace;font-size:8px;color:var(--text3);line-height:1.4;}
 .sigs{display:flex;gap:2px;flex-wrap:wrap;margin-bottom:5px;}
 .sig{padding:2px 5px;border-radius:3px;font-size:7px;font-weight:700;font-family:'DM Mono',monospace;}
 .s-cg{background:rgba(255,215,0,0.1);color:var(--gold);border:1px solid rgba(255,215,0,0.2);}
@@ -117,18 +108,16 @@ header{position:sticky;top:0;z-index:100;background:rgba(4,6,13,0.98);backdrop-f
 .pos-l{font-family:'DM Mono',monospace;font-size:8px;color:var(--text2);}
 .pos-v{font-family:'DM Mono',monospace;font-size:9px;font-weight:700;}
 .lrow{display:flex;gap:3px;flex-wrap:wrap;padding-top:6px;border-top:1px solid var(--border);margin-top:3px;}
-.lnk{padding:3px 6px;border-radius:3px;border:1px solid var(--border2);color:var(--text3);font-size:8px;text-decoration:none;font-family:'DM Mono',monospace;transition:all 0.1s;white-space:nowrap;}
+.lnk{padding:3px 6px;border-radius:3px;border:1px solid var(--border2);color:var(--text3);font-size:8px;text-decoration:none;font-family:'DM Mono',monospace;white-space:nowrap;}
 .lnk:hover{border-color:var(--cyan);color:var(--cyan);}
 .lnk-p{border-color:rgba(156,95,255,0.3);color:var(--purple);}
 .lnk-cg{border-color:rgba(255,215,0,0.3);color:var(--gold);}
 .lnk-x{border-color:rgba(61,142,255,0.3);color:var(--blue);}
-.loading{display:flex;flex-direction:column;align-items:center;justify-content:center;height:220px;gap:12px;}
+.loading{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:220px;gap:12px;padding:20px;}
 .spin{width:30px;height:30px;border:2px solid var(--border2);border-top-color:var(--cyan);border-radius:50%;animation:sp 0.7s linear infinite;}
 @keyframes sp{to{transform:rotate(360deg)}}
 .ltxt{font-family:'DM Mono',monospace;font-size:10px;color:var(--text2);text-align:center;line-height:1.8;}
-.empty-state{display:flex;flex-direction:column;align-items:center;justify-content:center;height:180px;gap:8px;grid-column:1/-1;}
-.ei{font-size:30px;opacity:0.2;}.et{font-family:'DM Mono',monospace;font-size:10px;color:var(--text2);text-align:center;line-height:1.7;}
-.no-tokens-msg{grid-column:1/-1;padding:20px;background:var(--bg2);border:1px solid rgba(255,194,51,0.2);border-radius:8px;font-family:'DM Mono',monospace;font-size:10px;color:var(--text2);line-height:1.9;text-align:center;}
+.nomatch{grid-column:1/-1;padding:24px;background:var(--bg2);border:1px solid rgba(255,194,51,0.2);border-radius:8px;font-family:'DM Mono',monospace;font-size:10px;color:var(--text2);text-align:center;line-height:2;}
 @media(max-width:700px){.grid{grid-template-columns:1fr}}
 </style>
 </head>
@@ -148,12 +137,13 @@ header{position:sticky;top:0;z-index:100;background:rgba(4,6,13,0.98);backdrop-f
   <div class="scan-bar"></div>
 </header>
 <div class="criteria">
-  <span class="cr">🦎 CoinGecko Listed</span>
-  <span class="cr">📉 Pumped $900K+ → Dumped to $5K–$50K</span>
-  <span class="cr">📊 Vol $30K–$200K</span>
-  <span class="cr">𝕏 X Actively Posting</span>
-  <span class="cr">👥 200+ Holders</span>
-  <span class="cr">⏰ Age 24h–720h</span>
+  <span class="cr">🦎 CoinGecko Check</span>
+  <span class="cr">📉 Big Dump Detected</span>
+  <span class="cr">💰 MC $1K–$200K</span>
+  <span class="cr">📊 Vol $10K–$500K</span>
+  <span class="cr">𝕏 X Handle</span>
+  <span class="cr">⏰ Age 1h–720h</span>
+  <span class="cr">🔁 PumpSwap · Raydium</span>
 </div>
 <div class="mrow">
   <div class="mri"><span class="mrl">SOL</span><span class="mrv" id="solFull">$--</span></div>
@@ -176,141 +166,135 @@ header{position:sticky;top:0;z-index:100;background:rgba(4,6,13,0.98);backdrop-f
 <div class="fbar">
   <span class="ftitle">🌊 Setups</span>
   <button class="fb act" onclick="filt('all',this)">ALL</button>
-  <button class="fb" onclick="filt('enter',this)">✅ ENTER NOW</button>
   <button class="fb" onclick="filt('cg',this)">🦎 CG LISTED</button>
   <button class="fb" onclick="filt('x',this)">𝕏 X ACTIVE</button>
   <button class="fb" onclick="filt('dh',this)">💎 DIAMOND HANDS</button>
-  <button class="fb" onclick="filt('acc',this)">🔄 ACCUMULATING</button>
   <span class="cnt" id="cntBadge">0 tokens</span>
   <button class="rbtn" onclick="doRefresh()">⟳ Refresh</button>
 </div>
-<div id="loadDiv" class="loading">
-  <div class="spin"></div>
-  <div class="ltxt" id="loadTxt">Connecting to Solana data...<br><small style="opacity:0.5">Fetching via server — no CORS issues</small></div>
-</div>
-<div class="grid" id="grid" style="display:none"></div>
+<div id="main"></div>
 
 <script>
 const EMOJIS=['🌊','🔥','💎','🚀','⚡','🐸','🤖','🐉','👑','🦅','🐳','🎯','⭐','🏆','🌙','💰','🦊','🐯','🎪','🎭'];
 const elog=n=>EMOJIS[Math.abs([...n].reduce((a,c)=>a+c.charCodeAt(0),0))%EMOJIS.length];
 const fmc=n=>{if(!n||isNaN(n))return'N/A';if(n>=1e6)return'$'+(n/1e6).toFixed(2)+'M';if(n>=1e3)return'$'+(n/1e3).toFixed(1)+'K';return'$'+Math.round(n);};
+let tokens=[],activeF='all',market={solPrice:0,solChg:0,btcChg:0,fearGreed:50,fgLabel:'Neutral',timing:'warn',timingLabel:'⟳ Loading...'},cdSecs=300;
 
-let tokens=[], activeF='all', market={solPrice:0,solChg:0,btcChg:0,fearGreed:50,fgLabel:'Neutral',timing:'warn',timingLabel:'⟳ Loading...'}, cdSecs=300;
+function setMain(html){document.getElementById('main').innerHTML=html;}
+function setTxt(t){setMain(`<div class="loading"><div class="spin"></div><div class="ltxt">${t}</div></div>`);}
 
-// BASE URL — points to Vercel API routes when hosted, relative when local
-const BASE = "";
-
-async function fetchMarket() {
-  try {
-    const d = await fetch(`${BASE}/api/market`).then(r=>r.json());
-    market.solPrice=d.solPrice||0; market.solChg=d.solChg||0; market.btcChg=d.btcChg||0;
-    market.fearGreed=d.fearGreed||50; market.fgLabel=d.fgLabel||'Neutral';
-    const sol=market.solChg, fg=market.fearGreed;
+async function fetchMarket(){
+  try{
+    const d=await fetch('/api/market').then(r=>r.json());
+    market.solPrice=d.solPrice||0;market.solChg=d.solChg||0;market.btcChg=d.btcChg||0;
+    market.fearGreed=d.fearGreed||50;market.fgLabel=d.fgLabel||'Neutral';
+    const sol=market.solChg,fg=market.fearGreed;
     if(sol>=3&&fg>=60){market.timing='good';market.timingLabel='✅ BULL — Best window';}
     else if(sol>=0&&fg>=45){market.timing='good';market.timingLabel='✅ STABLE — Good entries';}
     else if(sol>=-2){market.timing='warn';market.timingLabel='⚠️ COOLING — Wait for confirm';}
     else{market.timing='bad';market.timingLabel='🔴 DUMPING — Avoid entries';}
     document.getElementById('solPx').textContent='$'+market.solPrice.toFixed(2);
     document.getElementById('solFull').textContent='$'+market.solPrice.toFixed(2);
-    const sc=document.getElementById('sol24'); sc.textContent=(sol>=0?'+':'')+sol.toFixed(1)+'%'; sc.className='mrv '+(sol>=1?'up':sol<=-1?'dn':'ne');
-    const bc=document.getElementById('btc24'); bc.textContent=(market.btcChg>=0?'+':'')+market.btcChg.toFixed(1)+'%'; bc.className='mrv '+(market.btcChg>=1?'up':market.btcChg<=-1?'dn':'ne');
+    const sc=document.getElementById('sol24');sc.textContent=(sol>=0?'+':'')+sol.toFixed(1)+'%';sc.className='mrv '+(sol>=1?'up':sol<=-1?'dn':'ne');
+    const bc=document.getElementById('btc24');bc.textContent=(market.btcChg>=0?'+':'')+market.btcChg.toFixed(1)+'%';bc.className='mrv '+(market.btcChg>=1?'up':market.btcChg<=-1?'dn':'ne');
     document.getElementById('fgVal').textContent=market.fearGreed;
     document.getElementById('fgFull').textContent=market.fearGreed+' — '+market.fgLabel;
-    const mp=document.getElementById('mktPill'); mp.textContent=market.timingLabel; mp.className='mktpill '+(market.timing==='good'?'mp-g':market.timing==='warn'?'mp-w':'mp-b');
-  } catch(e) {}
+    const mp=document.getElementById('mktPill');mp.textContent=market.timingLabel;mp.className='mktpill '+(market.timing==='good'?'mp-g':market.timing==='warn'?'mp-w':'mp-b');
+  }catch(e){console.log('market err',e);}
 }
 
-async function fetchAll() {
-  document.getElementById('loadDiv').style.display='flex';
-  document.getElementById('grid').style.display='none';
+async function fetchAll(){
+  setTxt('Scanning DexScreener for second wave setups...<br><small style="opacity:0.5">Fetching via server</small>');
   document.getElementById('apiSt').textContent='⟳';
-  setTxt('Fetching filtered pairs from server...');
   await fetchMarket();
-  try {
-    setTxt('Server scanning DexScreener for tokens that pumped $900K+ then dumped...');
-    const d = await fetch(`${BASE}/api/pairs`).then(r=>r.json());
-    setTxt(`Server found ${d.total} pairs → ${d.filtered} match filters. Checking CoinGecko...`);
-    const pairs = d.pairs || [];
-    const enriched = [];
-    for(let i=0; i<Math.min(pairs.length, 20); i++) {
-      setTxt(`Verifying token ${i+1}/${Math.min(pairs.length,20)} on CoinGecko...`);
-      const t = await enrichPair(pairs[i]);
-      if(t) enriched.push(t);
+  try{
+    setTxt('Fetching pairs from server...');
+    const d=await fetch('/api/pairs').then(r=>r.json());
+    console.log('pairs result:',d);
+    setTxt(`Found ${d.total} pairs → ${d.filtered} match filters. Enriching...`);
+    const pairs=d.pairs||[];
+    if(!pairs.length){
+      setMain(`<div class="grid"><div class="nomatch">🌊 No second wave setups right now.<br>${d.total} pairs scanned — ${d.filtered} passed basic filters.<br><br>Filters: MC $1K–$200K · Vol $10K–$500K · Dumped 50%+<br><br>Auto-refreshes every 5 minutes.</div></div>`);
+      document.getElementById('apiSt').textContent='✅';
+      document.getElementById('liveCount').textContent='0 tokens';
+      document.getElementById('wCount').textContent='0';
+      updateSummary();
+      return;
+    }
+    const enriched=[];
+    for(let i=0;i<Math.min(pairs.length,20);i++){
+      setTxt(`Checking token ${i+1}/${Math.min(pairs.length,20)} on CoinGecko...`);
+      const t=await enrichPair(pairs[i]);
+      if(t)enriched.push(t);
     }
     enriched.sort((a,b)=>{const o={'BUY ZONE':0,'WATCHING':1,'WAIT':2};return(o[a.cat]||1)-(o[b.cat]||1)||b.score-a.score;});
-  } catch(e) {
-    console.error('Fetch error:', e);
-    tokens = demoTokens();
+    tokens=enriched;
+    document.getElementById('apiSt').textContent='✅ Live';
+    document.getElementById('liveCount').textContent=tokens.length+' tokens';
+    document.getElementById('wCount').textContent=tokens.length;
+    updateSummary();
+    renderGrid();
+  }catch(e){
+    console.error('fetchAll error:',e);
+    setMain(`<div class="grid"><div class="nomatch">❌ Error fetching data: ${e.message}<br><br>Check console for details.</div></div>`);
+    document.getElementById('apiSt').textContent='❌ Error';
   }
-  updateSummary();
-  document.getElementById('loadDiv').style.display='none';
-  document.getElementById('grid').style.display='grid';
-  renderGrid();
 }
 
-function noTokensFound(filtered) {
-  // No tokens pass all filters right now — show message card
-  return [{ _noMatch: true, filtered }];
-}
-
-function setTxt(t){const el=document.getElementById('loadTxt');if(el)el.innerHTML=t+'<br><small style="opacity:0.45">Server-side fetch — CORS bypassed</small>';}
-
-async function enrichPair(p) {
+async function enrichPair(p){
   const addr=p.baseToken?.address||'';
   const name=p.baseToken?.name||'Unknown';
   const ticker=p.baseToken?.symbol||'???';
   const mc=+(p.marketCap)||+(p.fdv)||0;
-  const v24=+(p.volume?.h24)||0, v1h=+(p.volume?.h1)||0, v6h=+(p.volume?.h6)||0;
+  const v24=+(p.volume?.h24)||0,v1h=+(p.volume?.h1)||0;
   const liq=+(p.liquidity?.usd)||0;
-  const ch24=+(p.priceChange?.h24)||0, ch6=+(p.priceChange?.h6)||0, ch1=+(p.priceChange?.h1)||0;
-  const b1h=p.txns?.h1?.buys||0, s1h=p.txns?.h1?.sells||0;
-  const b24=p.txns?.h24?.buys||0, s24=p.txns?.h24?.sells||0;
+  const ch24=+(p.priceChange?.h24)||0,ch1=+(p.priceChange?.h1)||0;
+  const b1h=p.txns?.h1?.buys||0,s1h=p.txns?.h1?.sells||0;
+  const b24=p.txns?.h24?.buys||0,s24=p.txns?.h24?.sells||0;
   const ageH=p.pairCreatedAt?(Date.now()-p.pairCreatedAt)/3600000:48;
-  const ratio=1+(ch24/100); const peakMC=ratio>0?mc/ratio:mc*25;
-  const holders=estimateH(b24,s24);
+  const ratio=1+(ch24/100);
+  const peakMC=ratio>0&&ratio<1?mc/ratio:mc*2;
+  const dropPct=Math.abs(Math.round(ch24));
+  const upsideToPeak=Math.max(1,Math.round(peakMC/mc));
   const socials=p.info?.socials||[];
   const twitter=socials.find(s=>s.type==='twitter')?.url||'';
   const telegram=socials.find(s=>s.type==='telegram')?.url||'';
-  const x=checkX(p);
-  // CG check via server proxy (no CORS)
-  let cg={listed:false};
-  try { cg=await fetch(`${BASE}/api/cg?addr=${addr}`).then(r=>r.json()); } catch(e){}
-  const psych=holderPsych(p);
-  const accum=detectAccum(p);
-  const dropPct=Math.abs(Math.round(ch24));
-  const upsideToPeak=Math.round(peakMC/mc);
+  const hasX=!!twitter;
+  const xActive=hasX&&(+(p.volume?.h1)||0)>0;
   const dexUrl=p.url||`https://dexscreener.com/solana/${addr}`;
-  const t={addr,name,ticker,logo:elog(name),mc,v24,v1h,v6h,liq,ch24,ch6,ch1,b1h,s1h,b24,s24,ageH:Math.round(ageH),ageLabel:ageH<48?Math.round(ageH)+'h':Math.round(ageH/24)+'d',peakMC,dropPct,upsideToPeak,holders,boosts:p.boosts?.active||0,twitter,telegram,dexUrl,addrShort:addr?addr.slice(0,6)+'...'+addr.slice(-6):'???',x,cg,psych,accum};
-  const{score,cat}=scoreT(t); t.score=score; t.cat=cat;
-  t.timing=getTiming({accum:accum.phase==='ACCUMULATION',dh:psych.dh>=55,cg:cg.listed,x:x.active});
-  t.pos=posSize(score,cg.listed,x.active,accum.phase==='ACCUMULATION');
-  return t;
+  let cg={listed:false};
+  try{cg=await fetch(`/api/cg?addr=${addr}`).then(r=>r.json());}catch(e){}
+  const dh=b1h>s1h?62:45,ph=b1h>s1h?10:30,mh=100-dh-ph;
+  const psych={dh,mh,ph,verdict:dh>=55?'💎 DIAMOND HANDS':'⚖️ MIXED',color:dh>=55?'var(--green)':'var(--yellow)',desc:dh>=55?'More buyers than sellers — strong hands':'Watch for direction confirmation'};
+  let score=40;
+  if(cg.listed)score+=20;if(hasX)score+=10;if(xActive)score+=8;if(b1h>s1h)score+=8;if(ch1>0)score+=8;if(dropPct>=70)score+=6;
+  const cat=score>=70?'BUY ZONE':score>=52?'WATCHING':'WAIT';
+  const sol=market.solChg,fg=market.fearGreed;
+  let ts=0;
+  if(sol>=2)ts+=20;else if(sol>=0)ts+=10;else ts-=15;
+  if(fg>=60)ts+=15;else if(fg>=40)ts+=5;else ts-=20;
+  if(b1h>s1h)ts+=15;if(ch1>0)ts+=10;if(cg.listed)ts+=10;
+  const timing=ts>=50?{action:'✅ ENTER NOW',cls:'g',reason:`SOL ${sol>=0?'+':''}${sol.toFixed(1)}% · F&G:${fg}${b1h>s1h?' · More buyers':''}`}:ts>=20?{action:'👀 WATCH CLOSELY',cls:'w',reason:`F&G:${fg} · SOL ${sol.toFixed(1)}%`}:{action:'🔴 WAIT',cls:'b',reason:`Market weak · F&G:${fg}`};
+  let pct='Paper only',plabel='SPECULATIVE',pcol='var(--text2)';
+  if(score>=75){pct='3–5%';plabel='HIGH CONVICTION';pcol='var(--green)';}
+  else if(score>=62){pct='1–3%';plabel='NORMAL';pcol='var(--cyan)';}
+  else if(score>=50){pct='0.5–1%';plabel='SMALL BET';pcol='var(--yellow)';}
+  return{addr,name,ticker,logo:elog(name),mc,v24,v1h,liq,ch24,ch1,b1h,s1h,b24,s24,ageH:Math.round(ageH),ageLabel:ageH<48?Math.round(ageH)+'h':Math.round(ageH/24)+'d',peakMC,dropPct,upsideToPeak,boosts:p.boosts?.active||0,twitter,telegram,hasX,xActive,dexUrl,addrShort:addr?addr.slice(0,6)+'...'+addr.slice(-6):'???',cg,psych,score,cat,timing,pos:{pct,label:plabel,color:pcol}};
 }
-
-function estimateH(b24,s24){const tx=b24+s24;if(tx>1000)return900;if(tx>400)return450;if(tx>150)return220;if(tx>80)return130;return70;}
-function checkX(p){const socials=p.info?.socials||[];const xs=socials.find(s=>s.type==='twitter');if(!xs?.url)return{active:false,handle:null,url:null,signal:'No X handle'};const handle=xs.url.split('/').pop().replace('@','');const v1h=+(p.volume?.h1)||0,boosts=p.boosts?.active||0,b1h=p.txns?.h1?.buys||0;const score=(v1h>0?1:0)+(b1h>0?1:0)+(boosts>0?2:0);return{active:score>=2,handle,url:xs.url,signal:boosts>0?'Boosted+active':v1h>0?'Vol active':'Handle found',score};}
-function holderPsych(p){const ch24=+(p.priceChange?.h24)||0,b1h=p.txns?.h1?.buys||0,s1h=p.txns?.h1?.sells||0,b6h=p.txns?.h6?.buys||0,s6h=p.txns?.h6?.sells||0;const sp1h=(s1h+b1h)>0?s1h/(s1h+b1h):0.5,sp6h=(s6h+b6h)>0?s6h/(s6h+b6h):0.5;let dh=45,mh=35,ph=20;if(ch24<-70&&b1h>s1h){dh=62;mh=28;ph=10;}else if(ch24<-70&&sp1h>0.6){dh=20;mh=30;ph=50;}else if(b1h>s1h){dh=55;mh=32;ph=13;}else if(sp6h>0.6){dh=25;mh=35;ph=40;}const verdict=dh>=55?'💎 DIAMOND HANDS':ph>=40?'📄 PAPER HANDS':'⚖️ MIXED';const color=dh>=55?'var(--green)':ph>=40?'var(--red)':'var(--yellow)';const desc=dh>=55?'Holders not selling dip — strong conviction':ph>=40?'Weak hands still exiting — wait for flush':'Mixed — watch volume';return{dh,mh,ph,verdict,color,desc};}
-function detectAccum(p){const ch1=+(p.priceChange?.h1)||0,ch6=+(p.priceChange?.h6)||0,v1h=+(p.volume?.h1)||0,v6h=+(p.volume?.h6)||0,v24=+(p.volume?.h24)||0,b1h=p.txns?.h1?.buys||0,s1h=p.txns?.h1?.sells||0;const flat=Math.abs(ch1)<6&&Math.abs(ch6)<18,steady=v24>0&&v1h>v24*0.02&&v1h<v24*0.15,moreBuys=b1h>s1h,notZero=v1h>100;if(flat&&steady&&moreBuys&&notZero)return{phase:'ACCUMULATION',label:'🔄 Accumulation Phase',desc:'Price stable + steady buys = smart money loading quietly.',color:'var(--green)'};if(moreBuys&&notZero&&Math.abs(ch1)<12)return{phase:'EARLY',label:'👀 Early Accumulation',desc:'More buyers than sellers — watch for confirmation.',color:'var(--yellow)'};return{phase:'NONE',label:'',desc:'',color:''};}
-function getTiming(opts){const sol=market.solChg,fg=market.fearGreed,utcH=new Date().getUTCHours();const peak=(utcH>=13&&utcH<=17)||(utcH>=19&&utcH<=23);let sc=0;if(sol>=3)sc+=28;else if(sol>=1)sc+=16;else if(sol>=0)sc+=7;else if(sol>=-2)sc-=14;else sc-=30;if(fg>=70)sc+=16;else if(fg>=55)sc+=9;else if(fg>=40)sc+=3;else if(fg<=25)sc-=22;else sc-=10;if(peak)sc+=14;else if(utcH>=2&&utcH<=8)sc-=16;if(opts.accum)sc+=20;if(opts.dh)sc+=12;if(opts.cg)sc+=10;if(opts.x)sc+=8;if(sc>=65)return{action:'✅ ENTER NOW',cls:'g',reason:`SOL ${sol>=0?'+':''}${sol.toFixed(1)}% · F&G:${fg}${opts.accum?' · Accumulating':''}${peak?' · Peak hrs':''}`};if(sc>=35)return{action:'👀 WATCH CLOSELY',cls:'w',reason:`Wait for confirm · F&G:${fg} · SOL ${sol.toFixed(1)}%`};return{action:'🔴 WAIT',cls:'b',reason:`Market weak · SOL ${sol.toFixed(1)}% · F&G:${fg}`};}
-function scoreT(t){let s=40;if(t.cg?.listed)s+=20;if(t.cg?.watchlist>=500)s+=8;if(t.x?.active)s+=12;if(t.accum?.phase==='ACCUMULATION')s+=14;if(t.psych?.dh>=55)s+=9;if(t.ch24<=-90)s+=8;if(t.v24>=50000)s+=5;if(t.b1h>t.s1h)s+=4;const cat=s>=70?'BUY ZONE':s>=52?'WATCHING':'WAIT';return{score:Math.min(99,s),cat};}
-function posSize(s,cg,x,acc){let sc=s+(cg?10:0)+(x?7:0)+(acc?6:0);if(sc>=80)return{pct:'3–5%',label:'HIGH CONVICTION',color:'var(--green)'};if(sc>=65)return{pct:'1–3%',label:'NORMAL',color:'var(--cyan)'};if(sc>=50)return{pct:'0.5–1%',label:'SMALL BET',color:'var(--yellow)'};return{pct:'Paper only',label:'SPECULATIVE',color:'var(--text2)'};}
 
 function renderGrid(){
   let list=[...tokens];
-  if(list[0]?._noMatch){document.getElementById('grid').innerHTML=`<div class="no-tokens-msg">🌊 No tokens match all filters right now.<br>${list[0].filtered} tokens passed MC/Vol/Age/Dump filters but none cleared CoinGecko listing check.<br><br>This is normal — the filter is strict by design.<br>Auto-refreshes every 5 minutes. Try again soon.</div>`;document.getElementById('cntBadge').textContent='0 tokens';updateSummary();return;}
-  if(activeF==='enter')list=list.filter(t=>t.timing?.cls==='g');
   if(activeF==='cg')list=list.filter(t=>t.cg?.listed);
-  if(activeF==='x')list=list.filter(t=>t.x?.active);
+  if(activeF==='x')list=list.filter(t=>t.hasX);
   if(activeF==='dh')list=list.filter(t=>t.psych?.dh>=55);
-  if(activeF==='acc')list=list.filter(t=>t.accum?.phase==='ACCUMULATION');
   document.getElementById('cntBadge').textContent=list.length+' tokens';
-  const g=document.getElementById('grid');g.innerHTML='';
-  if(!list.length){g.innerHTML=`<div class="empty-state"><div class="ei">🌊</div><div class="et">No tokens match this filter<br><small>Try ALL</small></div></div>`;return;}
-  list.forEach((t,i)=>{const el=document.createElement('div');el.className='card'+(i<3?' top':'');el.style.animationDelay=(i*38)+'ms';el.innerHTML=cardHTML(t);g.appendChild(el);});
+  if(!list.length){setMain(`<div class="grid"><div class="nomatch">No tokens match this filter. Try ALL.</div></div>`);return;}
+  const grid=document.createElement('div');grid.className='grid';
+  list.forEach((t,i)=>{const el=document.createElement('div');el.className='card'+(i<3?' top':'');el.style.animationDelay=(i*40)+'ms';el.innerHTML=cardHTML(t);grid.appendChild(el);});
+  setMain('');document.getElementById('main').appendChild(grid);
 }
 
 function cardHTML(t){
-  if(t._demo)return demoCardHTML(t);
   const sc=t.cat==='BUY ZONE'?'var(--cyan)':t.cat==='WATCHING'?'var(--yellow)':'var(--red)';
   const tc=t.timing.cls==='g'?'var(--green)':t.timing.cls==='w'?'var(--yellow)':'var(--red)';
   const bars=genBars(t.dropPct),maxB=Math.max(...bars);
@@ -322,13 +306,13 @@ function cardHTML(t){
     <span class="ca-txt" title="${t.addr}" onclick="copyCA('${t.addr}',this)">${t.addrShort}</span>
   </div>
   <div class="ct">
-    <div class="ctl"><div class="clogo">${t.logo}</div><div><div class="cname">${t.name}</div><div class="ctick">$${t.ticker}</div><div class="cmeta">${t.ageLabel} old · ${t.holders.toLocaleString()}+ holders</div></div></div>
+    <div class="ctl"><div class="clogo">${t.logo}</div><div><div class="cname">${t.name}</div><div class="ctick">$${t.ticker}</div><div class="cmeta">${t.ageLabel} old · ${t.boosts>0?t.boosts+' boosts · ':''}</div></div></div>
     <div class="ctr"><div class="cscore" style="color:${sc}">${t.score}</div><div class="ccat" style="color:${sc}">${t.cat}</div></div>
   </div>
   <div class="pj">
     <div class="pj-title">Pump Journey — 24h</div>
     <div class="bars">${barH}</div>
-    <div class="pj-row"><span class="pj-peak">Peak ~${fmc(t.peakMC)}</span><span style="color:var(--red);font-size:11px">→</span><span class="pj-now">Now ${fmc(t.mc)}</span><span class="pj-drop">-${t.dropPct}%</span><span class="pj-up">${t.upsideToPeak}x to peak</span></div>
+    <div class="pj-row"><span class="pj-peak">Peak ~${fmc(t.peakMC)}</span><span style="color:var(--red)">→</span><span class="pj-now">Now ${fmc(t.mc)}</span><span class="pj-drop">-${t.dropPct}%</span><span class="pj-up">${t.upsideToPeak}x to peak</span></div>
   </div>
   <div class="sg3">
     <div class="si"><div class="sv" style="color:var(--cyan)">${fmc(t.mc)}</div><div class="sl">MC Now</div></div>
@@ -340,15 +324,14 @@ function cardHTML(t){
     <div class="si"><div class="sv" style="color:${t.ch1>=0?'var(--green)':'var(--red)'}">${t.ch1>=0?'+':''}${t.ch1.toFixed(0)}%</div><div class="sl">1h Chg</div></div>
     <div class="si"><div class="sv">${t.b1h}/${t.s1h}</div><div class="sl">Buy/Sell 1h</div></div>
   </div>
-  ${t.cg?.listed?`<div class="cg-box"><span class="cg-t">🦎 COINGECKO ✅</span>${t.cg.rank?`<div class="cg-s"><div class="cg-sv" style="color:var(--gold)">#${t.cg.rank}</div><div class="cg-sl">Rank</div></div>`:''} ${t.cg.watchlist?`<div class="cg-s"><div class="cg-sv" style="color:var(--cyan)">${t.cg.watchlist.toLocaleString()}</div><div class="cg-sl">Watching</div></div>`:''} ${t.cg.athPct!==null?`<div class="cg-s"><div class="cg-sv" style="color:var(--yellow)">${t.cg.athPct}%</div><div class="cg-sl">vs ATH</div></div>`:''}</div>`:`<div style="padding:3px 7px;border-radius:4px;border:1px solid var(--border);background:var(--bg3);font-family:'DM Mono',monospace;font-size:8px;color:var(--text2);margin-bottom:5px">🦎 Not on CoinGecko yet</div>`}
-  <div class="x-box ${t.x?.active?'x-on':'x-off'}"><div class="x-t" style="color:${t.x?.active?'var(--blue)':'var(--text2)'}">𝕏 ${t.x?.active?'X ACTIVE':t.x?.handle?'X Found — Low activity':'No X handle'}</div>${t.x?.handle?`<div class="x-d">@${t.x.handle} · ${t.x.signal}${t.boosts>0?' · '+t.boosts+' boosts':''}</div>`:''}</div>
+  ${t.cg?.listed?`<div class="cg-box"><span class="cg-t">🦎 COINGECKO ✅</span>${t.cg.rank?`<div class="cg-s"><div class="cg-sv" style="color:var(--gold)">#${t.cg.rank}</div><div class="cg-sl">Rank</div></div>`:''} ${t.cg.watchlist?`<div class="cg-s"><div class="cg-sv" style="color:var(--cyan)">${t.cg.watchlist.toLocaleString()}</div><div class="cg-sl">Watching</div></div>`:''}</div>`:`<div style="padding:3px 7px;border-radius:4px;border:1px solid var(--border);background:var(--bg3);font-family:'DM Mono',monospace;font-size:8px;color:var(--text2);margin-bottom:5px">🦎 Not on CoinGecko</div>`}
+  <div class="x-box ${t.hasX?'x-on':'x-off'}"><div class="x-t" style="color:${t.hasX?'var(--blue)':'var(--text2)'}">𝕏 ${t.xActive?'X ACTIVE':t.hasX?'X Handle Found':'No X Handle'}</div>${t.hasX?`<div class="x-d"><a href="${t.twitter}" target="_blank" style="color:var(--blue)">${t.twitter.split('/').pop()}</a>${t.boosts>0?' · '+t.boosts+' boosts active':''}</div>`:''}</div>
   <div class="hbox"><div class="hbox-t">Holder Psychology</div><div class="hbar"><div class="hbar-d" style="width:${t.psych.dh}%"></div><div class="hbar-m" style="width:${t.psych.mh}%"></div><div class="hbar-p" style="width:${t.psych.ph}%"></div></div><div style="display:flex;justify-content:space-between;font-family:'DM Mono',monospace;font-size:7px;margin-bottom:3px"><span style="color:var(--green)">💎 ${t.psych.dh}%</span><span style="color:var(--yellow)">⚖️ ${t.psych.mh}%</span><span style="color:var(--red)">📄 ${t.psych.ph}%</span></div><div class="hverdict" style="color:${t.psych.color}">${t.psych.verdict}</div><div class="hdesc">${t.psych.desc}</div></div>
-  ${t.accum?.phase!=='NONE'?`<div class="accum-box ${t.accum.phase==='ACCUMULATION'?'acc-yes':'acc-early'}"><div class="acc-t" style="color:${t.accum.color}">${t.accum.label}</div><div class="acc-d">${t.accum.desc}</div></div>`:''}
   <div class="sigs">
     ${t.cg?.listed?'<span class="sig s-cg">🦎 CG Listed</span>':''}
-    ${t.x?.active?'<span class="sig s-x">𝕏 X Active</span>':''}
+    ${t.hasX?'<span class="sig s-x">𝕏 X Handle</span>':''}
+    ${t.xActive?'<span class="sig s-x">𝕏 X Active</span>':''}
     ${t.psych.dh>=55?'<span class="sig s-dh">💎 Diamond Hands</span>':''}
-    ${t.accum?.phase==='ACCUMULATION'?'<span class="sig s-acc">🔄 Accumulating</span>':''}
     ${t.b1h>t.s1h?'<span class="sig s-buy">📈 More Buyers</span>':''}
     ${t.boosts>0?`<span class="sig s-acc">🔥 ${t.boosts} Boosts</span>`:''}
     <span class="sig s-up">${t.upsideToPeak}x to peak</span>
@@ -370,24 +353,19 @@ function cardHTML(t){
 function genBars(dp){const b=[];for(let i=0;i<5;i++)b.push(8+i*17);b.push(94,89);const bot=Math.max(7,Math.round(94*(1-dp/100)));b.push(68,44,28,bot+5,bot+2,bot,bot+3,bot+7);return b;}
 
 function updateSummary(){
-  const real=tokens.filter(t=>!t._noMatch&&!t._demo);
-  const n=real.length,en=real.filter(t=>t.timing?.cls==='g').length,wa=real.filter(t=>t.timing?.cls==='w').length,cg=real.filter(t=>t.cg?.listed).length,xa=real.filter(t=>t.x?.active).length;
-  const avgD=n?Math.round(real.reduce((a,t)=>a+t.dropPct,0)/n):0;
-  const avgU=n?(real.reduce((a,t)=>a+t.upsideToPeak,0)/n).toFixed(1):'--';
-  document.getElementById('sTotal').textContent=n;document.getElementById('sEnter').textContent=en;document.getElementById('sWatch').textContent=wa;document.getElementById('sCG').textContent=cg;document.getElementById('sX').textContent=xa;document.getElementById('sAvgDrop').textContent='-'+avgD+'%';document.getElementById('sAvgUp').textContent=avgU+'x';document.getElementById('wCount').textContent=n;document.getElementById('foundCt').textContent=n;document.getElementById('cgCt').textContent=cg;document.getElementById('liveCount').textContent=n+' tokens';
+  const n=tokens.length,en=tokens.filter(t=>t.timing?.cls==='g').length,wa=tokens.filter(t=>t.timing?.cls==='w').length,cg=tokens.filter(t=>t.cg?.listed).length,xa=tokens.filter(t=>t.hasX).length;
+  const avgD=n?Math.round(tokens.reduce((a,t)=>a+t.dropPct,0)/n):0;
+  const avgU=n?(tokens.reduce((a,t)=>a+t.upsideToPeak,0)/n).toFixed(1):'--';
+  document.getElementById('sTotal').textContent=n;document.getElementById('sEnter').textContent=en;document.getElementById('sWatch').textContent=wa;document.getElementById('sCG').textContent=cg;document.getElementById('sX').textContent=xa;document.getElementById('sAvgDrop').textContent='-'+avgD+'%';document.getElementById('sAvgUp').textContent=avgU+'x';document.getElementById('foundCt').textContent=n;document.getElementById('cgCt').textContent=cg;
 }
 
 function copyCA(addr,btn){navigator.clipboard.writeText(addr).catch(()=>{});const o=btn.textContent;btn.textContent='✓ Copied!';setTimeout(()=>btn.textContent=o,1500);}
-function filt(f,btn){activeF=f;document.querySelectorAll('.fb').forEach(b=>b.classList.remove('act'));btn.classList.add('act');renderGrid();}
-function doRefresh(){cdSecs=300;fetchAll();}
-
-function demoTokens(){return[{_demo:true,addr:'DezXAZ8z7PnrnRJjz3wXBoRgixCa6xjnB7YaB1pPB263',name:'Demo Token',ticker:'DEMO',score:72,cat:'WATCHING',logo:'🌊',mc:38000,v24:88000,v1h:7000,liq:30000,ch24:-96,ch6:-30,ch1:4,b1h:42,s1h:18,ageH:18,ageLabel:'18h',peakMC:950000,dropPct:96,upsideToPeak:25,holders:820,boosts:2,twitter:'',telegram:'',dexUrl:'https://dexscreener.com',addrShort:'DezX...P263',x:{active:true,handle:'demotoken',signal:'Vol active'},cg:{listed:true,rank:4200,watchlist:1840,athPct:-92,cgId:'bonk'},psych:{dh:58,mh:28,ph:14,verdict:'💎 DIAMOND HANDS',color:'var(--green)',desc:'Holders not selling the dip'},accum:{phase:'ACCUMULATION',label:'🔄 Accumulation Phase',desc:'Price stable, steady buys coming in.',color:'var(--green)'},timing:{action:'👀 WATCH CLOSELY',cls:'w',reason:'Demo mode — host on Vercel to get live data'},pos:{pct:'1–3%',label:'NORMAL',color:'var(--cyan)'}}];}
-
-function demoCardHTML(t){return`<div style="padding:5px 8px;background:rgba(255,194,51,0.05);border:1px solid rgba(255,194,51,0.2);border-radius:5px;margin-bottom:8px;font-family:'DM Mono',monospace;font-size:8px;color:var(--yellow)">⚠️ DEMO MODE — Host on Vercel to get real live tokens. See README below.</div>${cardHTML({...t,_demo:false})}`;}
+function filt(f,btn){activeF=f;document.querySelectorAll('.fb').forEach(b=>b.classList.remove('act'));btn.classList.add('act');if(tokens.length)renderGrid();}
+function doRefresh(){cdSecs=300;tokens=[];fetchAll();}
 
 setInterval(()=>{cdSecs--;const m=Math.floor(cdSecs/60),s=cdSecs%60;const el=document.getElementById('cd');if(el)el.textContent=m+':'+(s<10?'0':'')+s;if(cdSecs<=0){cdSecs=300;doRefresh();}},1000);
 
-fetchMarket();fetchAll();
+fetchAll();
 </script>
 </body>
 </html>
